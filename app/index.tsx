@@ -1,11 +1,14 @@
-import { useFonts } from "@expo-google-fonts/inter";
 import { Redirect } from "expo-router";
+import { useFonts } from "@expo-google-fonts/inter";
+import "react-native-reanimated";
+
 import {
   Inter_400Regular,
   Inter_700Bold,
   Inter_600SemiBold,
   Inter_300Light,
 } from "@expo-google-fonts/inter";
+
 
 import { Text } from "react-native-ui-lib";
 export default function Index() {

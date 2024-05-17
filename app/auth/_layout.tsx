@@ -1,103 +1,103 @@
 import { Stack } from "expo-router";
 import { StyleSheet } from "react-native";
 import { Colors, Spacings as S } from "react-native-ui-lib";
+import { LocationModalContextProvider } from "../modals/choose_address_modal";
 const Spacings = S as any;
 
 export const authStyles = StyleSheet.create({
   Btn: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     width: 300,
-    marginBottom:20,
+    marginBottom: 20,
     borderWidth: 2,
-    borderColor: '#4ab7fd',
+    borderColor: "#4ab7fd",
   },
-  RegBtn:{
-    backgroundColor: 'white',
+  RegBtn: {
+    backgroundColor: "white",
     width: 200,
-    marginBottom:20,
+    marginBottom: 20,
     borderWidth: 2,
-    borderColor: '#4ab7fd'
+    borderColor: "#4ab7fd",
   },
-  ReglabelStyle:{
-    color: '#003b6f',
+  ReglabelStyle: {
+    color: "#003b6f",
     fontSize: 22,
     fontFamily: "Inter_600SemiBold",
-    padding:3
+    padding: 3,
   },
-  LoginBtn:{
-    backgroundColor: 'white',
+  LoginBtn: {
+    backgroundColor: "white",
     width: 200,
-    marginBottom:20,
+    marginBottom: 20,
     borderWidth: 2,
-    borderColor: '#4ab7fd'
+    borderColor: "#4ab7fd",
   },
-  LoginlabelStyle:{
-    color: '#003b6f',
+  LoginlabelStyle: {
+    color: "#003b6f",
     fontSize: 22,
     fontFamily: "Inter_600SemiBold",
-    padding:3
+    padding: 3,
   },
   labelStyle: {
-    color: '#003b6f',
+    color: "#003b6f",
     fontSize: 25,
     fontFamily: "Inter_600SemiBold",
-    padding:3
+    padding: 3,
   },
   LogBtn: {
     borderWidth: 2,
-    borderColor: '#4ab7fd',
-    marginBottom:35,
-    backgroundColor: '#4ab7fd',
+    borderColor: "#4ab7fd",
+    marginBottom: 35,
+    backgroundColor: "#4ab7fd",
     width: 300,
   },
   LoglabelStyle: {
     fontSize: 25,
-    fontFamily:'Inter_600SemiBold',
-    padding:3
+    fontFamily: "Inter_600SemiBold",
+    padding: 3,
   },
-  calIcn:{
-    color:"rgba(0, 59, 111, 0.8)",
-    position: 'absolute',
+  calIcn: {
+    color: "rgba(0, 59, 111, 0.8)",
+    position: "absolute",
     right: 35,
-    top:10,
+    top: 10,
   },
   backIcon: {
-    position: 'absolute',
+    position: "absolute",
     left: 35,
     top: 625,
-     color:"#003b6f"
+    color: "#003b6f",
   },
-  SecHeader:{
+  SecHeader: {
     fontFamily: "Inter_600SemiBold",
-    color: '#003b6f',
+    color: "#003b6f",
     fontSize: 40,
-    marginBottom: 10
+    marginBottom: 10,
   },
   Header: {
     fontFamily: "Inter_600SemiBold",
-    color: '#003b6f',
+    color: "#003b6f",
     fontSize: 50,
-    marginBottom: 30
+    marginBottom: 30,
   },
   logo: {
     width: 200,
     height: 200,
-    marginBottom: 50
+    marginBottom: 50,
   },
   form: {
-    flex: 1,
     flexDirection: "column",
     padding: Spacings.text / 2,
     justifyContent: "flex-start",
-    alignItems:"center"
+    alignItems: "center",
   },
   textField: {
     backgroundColor: "white",
     borderWidth: 2,
-    borderColor: '#4ab7fd',
+    borderColor: "#4ab7fd",
     borderRadius: 32,
-      width: 250,
-      padding: Spacings.text,
+    width: 250,
+    padding: Spacings.text,
   },
   textFieldContainer: {
     flexDirection: "row",
@@ -109,27 +109,27 @@ export const authStyles = StyleSheet.create({
     flex: 0.2,
     fontSize: 16,
   },
-  LogLabel:{
+  LogLabel: {
     color: Colors.black,
     fontFamily: "Inter_600SemiBold",
-    marginBottom:7,
-    marginLeft:23,
-    fontSize:18
+    marginBottom: 7,
+    marginLeft: 23,
+    fontSize: 18,
   },
   textFieldLabel: {
     color: Colors.black,
     fontFamily: "Inter_600SemiBold",
     paddingHorizontal: Spacings.text / 2,
     fontSize: 14,
-    width:120
+    width: 120,
   },
   label: {
-    color:'#4ab7fd',
+    color: "#4ab7fd",
     fontFamily: "Inter_400Regular",
     padding: Spacings.text,
     fontSize: 20,
     marginTop: Spacings.page,
-    fontWeight:'bold'
+    fontWeight: "bold",
   },
   container: {
     flex: 1,
@@ -148,6 +148,7 @@ export const authStyles = StyleSheet.create({
     padding: Spacings.text,
   },
 });
+
 export default function AuthLayout() {
   return (
     <Stack>

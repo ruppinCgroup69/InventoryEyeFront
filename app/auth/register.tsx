@@ -16,7 +16,8 @@ export default function WelcomeScreen() {
         <Button label="Supplier" labelStyle={authStyles.labelStyle} style={authStyles.Btn} />
       </Link>
       <Link href="auth/welcome" asChild>
-      <Ionicons style={authStyles.backIcon} name="arrow-back-circle-outline" size={26} />
+      <Ionicons style={authStyles.backIcon} name="arrow-back-circle-outline" size={
+        26} />
       </Link>
     </View>
   );

@@ -1,102 +1,253 @@
-import { Link } from "expo-router";
-import { DateTimePicker, TextField, View, Button } from "react-native-ui-lib";
+import {
+  DateTimePicker,
+  TextField,
+  View,
+  Button,
+  TouchableOpacity,
+  Modal,
+} from "react-native-ui-lib";
 import { Text, Image } from "react-native-ui-lib";
 import { authStyles } from "./_layout";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { AntDesign } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
-
+import { AntDesign } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { useCallback, useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { Alert, ScrollView } from "react-native";
+import { UserRegister, UserRegisterScheme, UserType } from "@/types/auth.types";
+import { ZodError } from "zod";
+import { Link, router } from "expo-router";
+import { StyleSheet } from "react-native";
+import { useLocationModal } from "../modals/choose_address_modal";
+const CustomerRegisterScreenStyles = StyleSheet.create({
+  scrollView: {
+    ...authStyles.form,
+  },
+});
 export default function CustomerRegisterScreen() {
-  return (
-    <View style={authStyles.form}>
-      <Text style={[authStyles.SecHeader, { fontSize: 30, marginTop: 10 }]}>Customer Registration</Text>
-      <Image style={{ width: 120, height: 120, marginBottom: 20 }} source={require('../../images/logo.png')} />
-      <View style={authStyles.textFieldContainer}>
-        <Text style={authStyles.textFieldLabel}>Full Name</Text>
-        <TextField
-          keyboardType="visible-password"
-          placeholder="Enter full name"
-          fieldStyle={authStyles.textField}
-          enableErrors
-          validate={["required"]}
-          validationMessage={["Full Name is required"]}
-          placeholderTextColor={"lightgray"}
-        />
-      </View>
-      <View style={authStyles.textFieldContainer}>
-        <Text style={authStyles.textFieldLabel}>Email address</Text>
-        <TextField
-          placeholder="Enter Email"
-          fieldStyle={authStyles.textField}
-          enableErrors
-          validate={["required"]}
-          validationMessage={["Email address is required"]}
-          placeholderTextColor={"lightgray"}
-        />
-      </View>
-      <View style={authStyles.textFieldContainer}>
-        <Text style={authStyles.textFieldLabel}>Password</Text>
-        <TextField
-          keyboardType="visible-password"
-          placeholder="Enter Password"
-          secureTextEntry
-          fieldStyle={authStyles.textField}
-          enableErrors
-          validate={["required"]}
-          validationMessage={["Password is required"]}
-          placeholderTextColor={"lightgray"}
-        />
-      </View>
-      <View style={authStyles.textFieldContainer}>
-        <Text style={authStyles.textFieldLabel}>Email address</Text>
-        <TextField
-          keyboardType="visible-password"
-          placeholder="Re Enter Password"
-          secureTextEntry
-          fieldStyle={authStyles.textField}
-          enableErrors
-          validate={["required"]}
-          validationMessage={["Password is required"]}
-          placeholderTextColor={"lightgray"}
-        />
-      </View>
-      <View style={authStyles.textFieldContainer}>
-        <Text style={authStyles.textFieldLabel}>Birth Date</Text>
-        <View style={[authStyles.textField, { height: 51, marginBottom:20 }]}>
-        <AntDesign name="calendar" style={authStyles.calIcn} size={24}  />
-        <DateTimePicker style={{fontSize:14}}
-          placeholder="DD/MM/YYYY"
-          minimumDate={new Date(Date.now() - 18 * 365 * (24 * 60 * 60 * 1000))}
-        />
-        </View>
-      </View>
-      <View style={[authStyles.textFieldContainer,{marginBottom:20}]}>
-        <Text style={authStyles.textFieldLabel}>Choose Address</Text>
-        <View style={[authStyles.textField, { height: 53,flexDirection: 'row', alignItems: 'center' , paddingHorizontal: 8}]}>
-        <GooglePlacesAutocomplete styles={{textInput:{height: '100%', flex: 1,marginVertical: 0,paddingVertical: 0,fontSize:14}}}  
-          placeholder="Address"
-          onPress={(data, details = null) => {
-            console.log(data, details);
-          }}
-          onFail={(e) => console.log(e)}
-          query={{
-            // Todo: Move to environment variables
-            key: "AIzaSyC9bMzuBQ3M2Ot2KhuhkdFknSvzHuy9pBw",
-            language: "en",
-          }}
-        />
-        </View>
-      </View >
+  const { selectedLocation } = useLocationModal();
+  // const { login, register, loading, user, error} = useAuth()
+
+  const { register, loading, error, clearErrors } = useAuth();
+  const [rePassword, setRePassword] = useState("");
+
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string | null }>({
+    fullName: null,
+    userType: null,
+    email: null,
+    password: null,
+    rePassword: null,
+    addressLatitude: null,
+    addressLongtitude: null,
+    birthDate: null,
+  });
+  const [userRegister, setUserRegister] = useState<UserRegister>({
+    fullName: "",
+    userType: UserType.NORMAL,
+    email: "",
+    password: "",
+    addressLatitude: 0,
+    addressLongtitude: 0,
+    birthDate: 0,
+  });
+
+  useEffect(() => {
+    clearErrors();
+  }, []);
+  useEffect(() => {
+    if (error) {
+      if (typeof error === "string") Alert.alert(error);
+      else {
+        Alert.alert((error as any).message);
+      }
+    }
+  }, [error]);
+
+  const onRegisterSubmit = async () => {
+    try {
+      if (!selectedLocation) {
+        Alert.alert("Please choose address");
+        return;
+      }
+      userRegister.addressLatitude = selectedLocation.location.lat;
+      userRegister.addressLongtitude = selectedLocation.location.lng;
+      const parsed = UserRegisterScheme.parse(userRegister);
+      const registerResult = await register(parsed);
+      if (registerResult) {
+        router.replace("/auth/login");
+      }
+    } catch (e) {
+      if (e instanceof ZodError) {
+        const errors = e.issues
+          .map((issue) => {
+            const { path, message } = issue;
+            const fieldName = path.join(".");
+            return { [fieldName]: message };
+          })
+          .reduce((prev, next) => ({ ...prev, ...next }), {});
+        setFormErrors({ ...formErrors, ...errors });
+        console.error(errors);
+      } else {
+        // Handle other errors
+        console.error(e);
+      }
+    }
+  };
+
+  const onChangeField = <T extends keyof UserRegister>(key: T, value: UserRegister[T]) => {
+    setUserRegister({ ...userRegister, [key]: value });
+    onChangeFieldError(key, null); // remove errors when user types in for this field
+  };
+
+  const onLocationSelect = (addressLatitude: number, addressLongtitude: number) => {
+    setUserRegister({ ...userRegister, addressLatitude, addressLongtitude });
+  };
+
+  const onChangeFieldError = <T extends keyof UserRegister>(
+    key: T | "rePassword",
+    value: string | null
+  ) => {
+    setFormErrors({ ...formErrors, [key]: value });
+  };
+
+  const ErrorComponent = useCallback(() => {
+    if (!error) {
+      return null;
+    }
+    const errorText = typeof error == "string" ? error : (error as any).message;
+    return (
       <View>
-      <Link href="auth/welcome" asChild>
-      <Ionicons name="arrow-back-circle-outline" size={26} style={{position:'absolute', top:20,color:"#003b6f"}} />
-      </Link>
-      <View style={{ flexDirection: 'row', marginLeft:120 }}>
-      <Link href="/auth/login" asChild>
-        <Button label="Register" labelStyle={authStyles.ReglabelStyle} style={authStyles.RegBtn} />
-      </Link>
+        <Text>{errorText}</Text>
       </View>
-      </View>
+    );
+  }, [error]);
+
+  return (
+    <View style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={CustomerRegisterScreenStyles.scrollView}>
+        <Text style={[authStyles.SecHeader, { fontSize: 30, marginTop: 10 }]}>
+          Customer Registration
+        </Text>
+        <Image
+          style={{ width: 120, height: 120, marginBottom: 20 }}
+          source={require("../../images/logo.png")}
+        />
+        <View style={authStyles.textFieldContainer}>
+          <Text style={authStyles.textFieldLabel}>Full Name</Text>
+          <TextField
+            defaultValue="Avi"
+            keyboardType="visible-password"
+            placeholder="Enter full name"
+            fieldStyle={authStyles.textField}
+            enableErrors
+            onChangeText={(text) => onChangeField("fullName", text)}
+            validate={["required"]}
+            validationMessage={["Full Name is required"]}
+            placeholderTextColor={"lightgray"}
+          />
+          {formErrors.fullName && <Text red10>{formErrors.fullName}</Text>}
+        </View>
+        <View style={authStyles.textFieldContainer}>
+          <Text style={authStyles.textFieldLabel}>Email address</Text>
+          <TextField
+            defaultValue="Avi@gmail.com"
+            placeholder="Enter Email"
+            fieldStyle={authStyles.textField}
+            enableErrors
+            onChangeText={(text) => onChangeField("email", text)}
+            validate={["required"]}
+            validationMessage={["Email address is required"]}
+            placeholderTextColor={"lightgray"}
+          />
+          {formErrors.email && <Text red10>{formErrors.email}</Text>}
+        </View>
+        <View style={authStyles.textFieldContainer}>
+          <Text style={authStyles.textFieldLabel}>Password</Text>
+          <TextField
+            keyboardType="visible-password"
+            defaultValue="123456Aa!"
+            placeholder="Enter Password"
+            secureTextEntry
+            onChangeText={(text) => onChangeField("password", text)}
+            fieldStyle={authStyles.textField}
+            enableErrors
+            validate={["required"]}
+            validationMessage={["Password is required"]}
+            placeholderTextColor={"lightgray"}
+          />
+          {formErrors.password && <Text red10>{formErrors.password}</Text>}
+        </View>
+        <View style={authStyles.textFieldContainer}>
+          <Text style={authStyles.textFieldLabel}>Re Enter password</Text>
+          <TextField
+            keyboardType="visible-password"
+            defaultValue="123456Aa!"
+            placeholder="Re Enter Password"
+            secureTextEntry
+            fieldStyle={authStyles.textField}
+            enableErrors
+            onChangeText={(text) => setRePassword(text)}
+            validate={["required"]}
+            validationMessage={["Password is required"]}
+            placeholderTextColor={"lightgray"}
+          />
+          {formErrors.rePassword && <Text red10>{formErrors.rePassword}</Text>}
+        </View>
+        <View style={authStyles.textFieldContainer}>
+          <Text style={authStyles.textFieldLabel}>Birth Date</Text>
+          <View style={[authStyles.textField, { height: 51, marginBottom: 20 }]}>
+            <AntDesign name="calendar" style={authStyles.calIcn} size={24} />
+            <DateTimePicker
+              style={{ fontSize: 14 }}
+              placeholder="DD/MM/YYYY"
+              onChangeText={(text) => {
+                console.log(text);
+                onChangeField("birthDate", new Date(text).getTime());
+              }}
+              minimumDate={new Date(Date.now() - 18 * 365 * (24 * 60 * 60 * 1000))}
+            />
+            {formErrors.birthDate && <Text red10>{formErrors.birthDate}</Text>}
+          </View>
+        </View>
+        <View style={[authStyles.textFieldContainer, { marginBottom: 20 }]}>
+          <Text style={authStyles.textFieldLabel}>Choose Address</Text>
+          <View
+            style={[
+              authStyles.textField,
+              { flexDirection: "row", alignItems: "center", paddingHorizontal: 8 },
+            ]}
+          >
+            <Link href="/modals">
+              {selectedLocation ? (
+                <Text>{selectedLocation.name} </Text>
+              ) : (
+                <Text>Choose address</Text>
+              )}
+            </Link>
+          </View>
+          {(formErrors.addressLatitude || formErrors.addressLongtitude) && (
+            <Text red10>{formErrors.addressLatitude}</Text>
+          )}
+        </View>
+        <View>
+          <Link href="auth/welcome" asChild>
+            <Ionicons
+              name="arrow-back-circle-outline"
+              size={26}
+              style={{ position: "absolute", top: 20, color: "#003b6f" }}
+            />
+          </Link>
+          <View style={{ flexDirection: "row", marginLeft: 120 }}>
+            <Button
+              label="Register"
+              onPress={onRegisterSubmit}
+              labelStyle={authStyles.ReglabelStyle}
+              style={authStyles.RegBtn}
+            />
+          </View>
+        </View>
+        <ErrorComponent />
+      </ScrollView>
     </View>
   );
 }
