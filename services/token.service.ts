@@ -19,7 +19,7 @@ const tokenCache = {
     },
     async saveToken(key: string, value: string) {
       try {
-        return SecureStore.setItemAsync(key, value);
+        return SecureStore.setItemAsync(key, value.toString());
       } catch (err) {
         return;
       }

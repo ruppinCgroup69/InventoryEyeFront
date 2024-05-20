@@ -22,7 +22,7 @@ export const useLocationModal = () => {
   return context;
 };
 
-export default function ChooseAddress() {
+export default function ChooseAddress({ standAlone = false }: { standAlone: boolean }) {
   const { setSelectedLocation } = useLocationModal();
   const getPlaceGeometryId = async (id: string) => {
     try {
@@ -39,10 +39,14 @@ export default function ChooseAddress() {
     }
   };
   return (
-    <View style={{ flex: 1 , padding:8}}>
+    <View style={standAlone ? { padding: 8 } : { flex: 1, padding: 8 }}>
       <GooglePlacesAutocomplete
         styles={{
-          textInput: {
+          textInput: standAlone ? {
+            marginVertical: 0,
+            paddingVertical: 0,
+            fontSize: 14,
+          } : {
             height: "100%",
             flex: 1,
             marginVertical: 0,

@@ -1,9 +1,9 @@
 import { View, Text } from "react-native-ui-lib";
 
-export default function HomePage() {
+export default function ProfileScreen() {
   return (
     <View>
-      <Text>Hello world</Text>
+      <Text> Profile Screen </Text>
     </View>
   );
 }

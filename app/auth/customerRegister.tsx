@@ -1,14 +1,6 @@
-import {
-  DateTimePicker,
-  TextField,
-  View,
-  Button,
-  TouchableOpacity,
-  Modal,
-} from "react-native-ui-lib";
+import { DateTimePicker, TextField, View, Button } from "react-native-ui-lib";
 import { Text, Image } from "react-native-ui-lib";
 import { authStyles } from "./_layout";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useCallback, useEffect, useState } from "react";
@@ -18,7 +10,7 @@ import { UserRegister, UserRegisterScheme, UserType } from "@/types/auth.types";
 import { ZodError } from "zod";
 import { Link, router } from "expo-router";
 import { StyleSheet } from "react-native";
-import { useLocationModal } from "../modals/choose_address_modal";
+import { useLocationModal } from "@/app/modals/choose_address_modal";
 const CustomerRegisterScreenStyles = StyleSheet.create({
   scrollView: {
     ...authStyles.form,
@@ -46,6 +38,7 @@ export default function CustomerRegisterScreen() {
     userType: UserType.NORMAL,
     email: "",
     password: "",
+    imageUrl: "https://i.ibb.co/1mbj19Q/profile-sacred.png",
     addressLatitude: 0,
     addressLongtitude: 0,
     birthDate: 0,
@@ -54,17 +47,12 @@ export default function CustomerRegisterScreen() {
   useEffect(() => {
     clearErrors();
   }, []);
-  useEffect(() => {
-    if (error) {
-      if (typeof error === "string") Alert.alert(error);
-      else {
-        Alert.alert((error as any).message);
-      }
-    }
-  }, [error]);
+
+
 
   const onRegisterSubmit = async () => {
     try {
+      clearErrors();
       if (!selectedLocation) {
         Alert.alert("Please choose address");
         return;
@@ -73,6 +61,7 @@ export default function CustomerRegisterScreen() {
       userRegister.addressLongtitude = selectedLocation.location.lng;
       const parsed = UserRegisterScheme.parse(userRegister);
       const registerResult = await register(parsed);
+      console.log(registerResult);
       if (registerResult) {
         router.replace("/auth/login");
       }
@@ -132,102 +121,124 @@ export default function CustomerRegisterScreen() {
           style={{ width: 120, height: 120, marginBottom: 20 }}
           source={require("../../images/logo.png")}
         />
-        <View style={authStyles.textFieldContainer}>
+        <View style={authStyles.textFieldContainerPrimary}>
           <Text style={authStyles.textFieldLabel}>Full Name</Text>
-          <TextField
-            defaultValue="Avi"
-            keyboardType="visible-password"
-            placeholder="Enter full name"
-            fieldStyle={authStyles.textField}
-            enableErrors
-            onChangeText={(text) => onChangeField("fullName", text)}
-            validate={["required"]}
-            validationMessage={["Full Name is required"]}
-            placeholderTextColor={"lightgray"}
-          />
-          {formErrors.fullName && <Text red10>{formErrors.fullName}</Text>}
-        </View>
-        <View style={authStyles.textFieldContainer}>
-          <Text style={authStyles.textFieldLabel}>Email address</Text>
-          <TextField
-            defaultValue="Avi@gmail.com"
-            placeholder="Enter Email"
-            fieldStyle={authStyles.textField}
-            enableErrors
-            onChangeText={(text) => onChangeField("email", text)}
-            validate={["required"]}
-            validationMessage={["Email address is required"]}
-            placeholderTextColor={"lightgray"}
-          />
-          {formErrors.email && <Text red10>{formErrors.email}</Text>}
-        </View>
-        <View style={authStyles.textFieldContainer}>
-          <Text style={authStyles.textFieldLabel}>Password</Text>
-          <TextField
-            keyboardType="visible-password"
-            defaultValue="123456Aa!"
-            placeholder="Enter Password"
-            secureTextEntry
-            onChangeText={(text) => onChangeField("password", text)}
-            fieldStyle={authStyles.textField}
-            enableErrors
-            validate={["required"]}
-            validationMessage={["Password is required"]}
-            placeholderTextColor={"lightgray"}
-          />
-          {formErrors.password && <Text red10>{formErrors.password}</Text>}
-        </View>
-        <View style={authStyles.textFieldContainer}>
-          <Text style={authStyles.textFieldLabel}>Re Enter password</Text>
-          <TextField
-            keyboardType="visible-password"
-            defaultValue="123456Aa!"
-            placeholder="Re Enter Password"
-            secureTextEntry
-            fieldStyle={authStyles.textField}
-            enableErrors
-            onChangeText={(text) => setRePassword(text)}
-            validate={["required"]}
-            validationMessage={["Password is required"]}
-            placeholderTextColor={"lightgray"}
-          />
-          {formErrors.rePassword && <Text red10>{formErrors.rePassword}</Text>}
-        </View>
-        <View style={authStyles.textFieldContainer}>
-          <Text style={authStyles.textFieldLabel}>Birth Date</Text>
-          <View style={[authStyles.textField, { height: 51, marginBottom: 20 }]}>
-            <AntDesign name="calendar" style={authStyles.calIcn} size={24} />
-            <DateTimePicker
-              style={{ fontSize: 14 }}
-              placeholder="DD/MM/YYYY"
-              onChangeText={(text) => {
-                console.log(text);
-                onChangeField("birthDate", new Date(text).getTime());
-              }}
-              minimumDate={new Date(Date.now() - 18 * 365 * (24 * 60 * 60 * 1000))}
+          <View style={authStyles.textFieldContainerSecondary}>
+            <TextField
+              // defaultValue="Avi"
+              keyboardType="visible-password"
+              placeholder="Enter full name"
+              fieldStyle={authStyles.textField}
+              onChangeText={(text:string) => onChangeField("fullName", text)}
+              placeholderTextColor={"lightgray"}
             />
-            {formErrors.birthDate && <Text red10>{formErrors.birthDate}</Text>}
+            {formErrors.fullName && (
+              <Text red10 style={authStyles.textFieldError}>
+                {formErrors.fullName}
+              </Text>
+            )}
           </View>
         </View>
-        <View style={[authStyles.textFieldContainer, { marginBottom: 20 }]}>
-          <Text style={authStyles.textFieldLabel}>Choose Address</Text>
-          <View
-            style={[
-              authStyles.textField,
-              { flexDirection: "row", alignItems: "center", paddingHorizontal: 8 },
-            ]}
-          >
-            <Link href="/modals">
-              {selectedLocation ? (
-                <Text>{selectedLocation.name} </Text>
-              ) : (
-                <Text>Choose address</Text>
-              )}
-            </Link>
+        <View style={authStyles.textFieldContainerPrimary}>
+          <Text style={authStyles.textFieldLabel}>Email address</Text>
+          <View style={authStyles.textFieldContainerSecondary}>
+            <TextField
+              // defaultValue="Avi@gmail.com"
+              placeholder="Enter Email"
+              fieldStyle={authStyles.textField}
+              onChangeText={(text:string) => onChangeField("email", text)}
+              placeholderTextColor={"lightgray"}
+            />
+            {formErrors.email && (
+              <Text red10 style={authStyles.textFieldError}>
+                {formErrors.email}
+              </Text>
+            )}
           </View>
-          {(formErrors.addressLatitude || formErrors.addressLongtitude) && (
-            <Text red10>{formErrors.addressLatitude}</Text>
-          )}
+        </View>
+        <View style={authStyles.textFieldContainerPrimary}>
+          <Text style={authStyles.textFieldLabel}>Password</Text>
+          <View style={authStyles.textFieldContainerSecondary}>
+            <TextField
+              keyboardType="visible-password"
+              // defaultValue="123456Aa!"
+              placeholder="Enter Password"
+              secureTextEntry
+              onChangeText={(text:string) => onChangeField("password", text)}
+              fieldStyle={authStyles.textField}
+              placeholderTextColor={"lightgray"}
+            />
+            {formErrors.password && (
+              <Text red10 style={authStyles.textFieldError}>
+                {formErrors.password}
+              </Text>
+            )}
+          </View>
+        </View>
+        <View style={authStyles.textFieldContainerPrimary}>
+          <Text style={authStyles.textFieldLabel}>Re Enter password</Text>
+          <View style={authStyles.textFieldContainerSecondary}>
+            <TextField
+              keyboardType="visible-password"
+              // defaultValue="123456Aa!"
+              placeholder="Re Enter Password"
+              secureTextEntry
+              fieldStyle={authStyles.textField}
+              onChangeText={(text:string) => setRePassword(text)}
+              placeholderTextColor={"lightgray"}
+            />
+            {formErrors.rePassword && (
+              <Text red10 style={authStyles.textFieldError}>
+                {formErrors.rePassword}
+              </Text>
+            )}
+          </View>
+        </View>
+        <View style={authStyles.textFieldContainerPrimary}>
+          <Text style={authStyles.textFieldLabel}>Birth Date</Text>
+          <View style={authStyles.textFieldContainerSecondary}>
+            <View style={[authStyles.textField, { height: 51, marginBottom: 20 }]}>
+              <AntDesign name="calendar" style={authStyles.calIcn} size={24} />
+              <DateTimePicker
+                style={{ fontSize: 14 }}
+                placeholder="DD/MM/YYYY"
+                onChange={(date:Date) => {
+                  //console.log(date);
+                  onChangeField("birthDate", date.getTime());
+                }}
+                minimumDate={new Date(Date.now() - 18 * 365 * (24 * 60 * 60 * 1000))}
+              />
+              {formErrors.birthDate && (
+                <Text red10 style={authStyles.textFieldError}>
+                  {formErrors.birthDate}
+                </Text>
+              )}
+            </View>
+          </View>
+        </View>
+        <View style={[authStyles.textFieldContainerPrimary, { marginBottom: 20 }]}>
+          <Text style={authStyles.textFieldLabel}>Choose Address</Text>
+          <View style={authStyles.textFieldContainerSecondary}>
+            <View
+              style={[
+                authStyles.textField,
+                { flexDirection: "row", alignItems: "center", paddingHorizontal: 8 },
+              ]}
+            >
+              <Link href="/modals">
+                {selectedLocation ? (
+                  <Text>{selectedLocation.name} </Text>
+                ) : (
+                  <Text>Choose address</Text>
+                )}
+              </Link>
+            </View>
+            {(formErrors.addressLatitude || formErrors.addressLongtitude) && (
+              <Text red10 style={authStyles.textFieldError}>
+                {formErrors.addressLatitude}
+              </Text>
+            )}
+          </View>
         </View>
         <View>
           <Link href="auth/welcome" asChild>

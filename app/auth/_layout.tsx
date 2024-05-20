@@ -1,7 +1,6 @@
 import { Stack } from "expo-router";
 import { StyleSheet } from "react-native";
 import { Colors, Spacings as S } from "react-native-ui-lib";
-import { LocationModalContextProvider } from "../modals/choose_address_modal";
 const Spacings = S as any;
 
 export const authStyles = StyleSheet.create({
@@ -11,6 +10,11 @@ export const authStyles = StyleSheet.create({
     marginBottom: 20,
     borderWidth: 2,
     borderColor: "#4ab7fd",
+  },
+  textFieldError: {
+    padding: 4,
+    fontSize: 12,
+    textAlign: "left",
   },
   RegBtn: {
     backgroundColor: "white",
@@ -22,7 +26,7 @@ export const authStyles = StyleSheet.create({
   ReglabelStyle: {
     color: "#003b6f",
     fontSize: 22,
-    fontFamily: "Inter_600SemiBold",
+    // fontFamily: "Inter_600SemiBold",
     padding: 3,
   },
   LoginBtn: {
@@ -35,13 +39,13 @@ export const authStyles = StyleSheet.create({
   LoginlabelStyle: {
     color: "#003b6f",
     fontSize: 22,
-    fontFamily: "Inter_600SemiBold",
+    // fontFamily: "Inter_600SemiBold",
     padding: 3,
   },
   labelStyle: {
     color: "#003b6f",
     fontSize: 25,
-    fontFamily: "Inter_600SemiBold",
+    // fontFamily: "Inter_600SemiBold",
     padding: 3,
   },
   LogBtn: {
@@ -53,7 +57,7 @@ export const authStyles = StyleSheet.create({
   },
   LoglabelStyle: {
     fontSize: 25,
-    fontFamily: "Inter_600SemiBold",
+    // fontFamily: "Inter_600SemiBold",
     padding: 3,
   },
   calIcn: {
@@ -69,13 +73,13 @@ export const authStyles = StyleSheet.create({
     color: "#003b6f",
   },
   SecHeader: {
-    fontFamily: "Inter_600SemiBold",
+    // fontFamily: "Inter_600SemiBold",
     color: "#003b6f",
     fontSize: 40,
     marginBottom: 10,
   },
   Header: {
-    fontFamily: "Inter_600SemiBold",
+    // fontFamily: "Inter_600SemiBold",
     color: "#003b6f",
     fontSize: 50,
     marginBottom: 30,
@@ -99,9 +103,15 @@ export const authStyles = StyleSheet.create({
     width: 250,
     padding: Spacings.text,
   },
-  textFieldContainer: {
+  textFieldContainerPrimary: {
     flexDirection: "row",
     alignItems: "center",
+    marginBottom: 16,
+  },
+  textFieldContainerSecondary: {
+    flexDirection: "column",
+    alignItems: "center",
+    flex: 1,
   },
   textPlain: {
     color: Colors.black,
@@ -111,21 +121,22 @@ export const authStyles = StyleSheet.create({
   },
   LogLabel: {
     color: Colors.black,
-    fontFamily: "Inter_600SemiBold",
+    // fontFamily: "Inter_600SemiBold",
     marginBottom: 7,
     marginLeft: 23,
     fontSize: 18,
   },
   textFieldLabel: {
     color: Colors.black,
-    fontFamily: "Inter_600SemiBold",
+    // fontFamily: "Inter_600SemiBold",
     paddingHorizontal: Spacings.text / 2,
     fontSize: 14,
+    marginBottom: 2,
     width: 120,
   },
   label: {
     color: "#4ab7fd",
-    fontFamily: "Inter_400Regular",
+    // fontFamily: "Inter_400Regular",
     padding: Spacings.text,
     fontSize: 20,
     marginTop: Spacings.page,
@@ -142,7 +153,7 @@ export const authStyles = StyleSheet.create({
     backgroundColor: "white",
     width: 300,
     margin: Spacings.text,
-    fontFamily: "Inter_600SemiBold",
+    // fontFamily: "Inter_600SemiBold",
     textAlign: "center",
     fontSize: 20,
     padding: Spacings.text,
@@ -153,10 +164,10 @@ export default function AuthLayout() {
   return (
     <Stack>
       <Stack.Screen name="welcome" />
-      <Stack.Screen name="register" />
-      <Stack.Screen name="login" />
-      <Stack.Screen name="customerRegister" />
-      <Stack.Screen name="supplierRegister" />
+      <Stack.Screen name="register" options={{ title: "Registeration" }} />
+      <Stack.Screen name="login" options={{ title: "Login" }} />
+      <Stack.Screen name="customerRegister" options={{ title: "" }} />
+      <Stack.Screen name="supplierRegister" options={{ title: "" }} />
     </Stack>
   );
 }
