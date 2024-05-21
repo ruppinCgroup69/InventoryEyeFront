@@ -178,7 +178,7 @@ export default function NewPostScreen() {
                 textAlignVertical="top"
                 multiline
                 containerStyle={postStyles.postContentField}
-                onChangeText={(text) => onChangeField("postContent", text)}
+                onChangeText={(text:string) => onChangeField("postContent", text)}
                 placeholderTextColor={"gray"}
               />
             </View>
@@ -213,7 +213,7 @@ export default function NewPostScreen() {
               <Picker
                 value={newPost.category}
                 placeholder={"Choose Category"}
-                onChange={(e) => onChangeField("category", e as any)}
+                onChange={(e:string) => onChangeField("category", e as any)}
               >
                 {Object.entries(CategoryTypes).map((item) => (
                   <Picker.Item value={+item[0]} label={item[1]} />

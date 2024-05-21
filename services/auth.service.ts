@@ -10,6 +10,7 @@ export async function login(dto: UserLogin) {
 }
 
 export async function register(dto: UserRegister) {
+  console.log(axios.defaults.baseURL);
   const response = await axios.post<User>("/AuthUser/register", dto);
   if (response.status !== 200) {
     throw response.data;

@@ -18,7 +18,6 @@ const CustomerRegisterScreenStyles = StyleSheet.create({
 });
 export default function CustomerRegisterScreen() {
   const { selectedLocation } = useLocationModal();
-  // const { login, register, loading, user, error} = useAuth()
 
   const { register, loading, error, clearErrors } = useAuth();
   const [rePassword, setRePassword] = useState("");
@@ -48,8 +47,6 @@ export default function CustomerRegisterScreen() {
     clearErrors();
   }, []);
 
-
-
   const onRegisterSubmit = async () => {
     try {
       clearErrors();
@@ -61,7 +58,7 @@ export default function CustomerRegisterScreen() {
       userRegister.addressLongtitude = selectedLocation.location.lng;
       const parsed = UserRegisterScheme.parse(userRegister);
       const registerResult = await register(parsed);
-      console.log(registerResult);
+      console.log(parsed);
       if (registerResult) {
         router.replace("/auth/login");
       }
@@ -143,7 +140,7 @@ export default function CustomerRegisterScreen() {
           <Text style={authStyles.textFieldLabel}>Email address</Text>
           <View style={authStyles.textFieldContainerSecondary}>
             <TextField
-              // defaultValue="Avi@gmail.com"
+              
               placeholder="Enter Email"
               fieldStyle={authStyles.textField}
               onChangeText={(text:string) => onChangeField("email", text)}
@@ -161,7 +158,7 @@ export default function CustomerRegisterScreen() {
           <View style={authStyles.textFieldContainerSecondary}>
             <TextField
               keyboardType="visible-password"
-              // defaultValue="123456Aa!"
+              
               placeholder="Enter Password"
               secureTextEntry
               onChangeText={(text:string) => onChangeField("password", text)}
@@ -180,7 +177,7 @@ export default function CustomerRegisterScreen() {
           <View style={authStyles.textFieldContainerSecondary}>
             <TextField
               keyboardType="visible-password"
-              // defaultValue="123456Aa!"
+              
               placeholder="Re Enter Password"
               secureTextEntry
               fieldStyle={authStyles.textField}
@@ -203,10 +200,11 @@ export default function CustomerRegisterScreen() {
                 style={{ fontSize: 14 }}
                 placeholder="DD/MM/YYYY"
                 onChange={(date:Date) => {
-                  //console.log(date);
+                  
                   onChangeField("birthDate", date.getTime());
                 }}
-                minimumDate={new Date(Date.now() - 18 * 365 * (24 * 60 * 60 * 1000))}
+                minimumDate={new Date(Date.now() - 120 * 365 * (24 * 60 * 60 * 1000))}
+                maximumDate={new Date(Date.now() - 16 * 365 * (24 * 60 * 60 * 1000))}
               />
               {formErrors.birthDate && (
                 <Text red10 style={authStyles.textFieldError}>
