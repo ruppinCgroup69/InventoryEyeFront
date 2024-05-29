@@ -66,7 +66,6 @@ export default function ChooseAddress({ standAlone = false }: { standAlone: bool
         }}
         onFail={(e) => console.log(e)}
         query={{
-          // Todo: Move to environment variables
           key: "AIzaSyC9bMzuBQ3M2Ot2KhuhkdFknSvzHuy9pBw",
           language: "en",
         }}

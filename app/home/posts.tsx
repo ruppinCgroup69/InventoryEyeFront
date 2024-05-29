@@ -25,7 +25,7 @@ export default function PostsScreen() {
       <FlatList
         data={allPosts}
         renderItem={({ item }) => <PostItem post={item} />}
-        keyExtractor={(item) => item.postId.toString()}
+        keyExtractor={(item) => item.postId?.toString()}
       />
     </View>
   );

@@ -122,8 +122,6 @@ export default function CustomerRegisterScreen() {
           <Text style={authStyles.textFieldLabel}>Full Name</Text>
           <View style={authStyles.textFieldContainerSecondary}>
             <TextField
-              // defaultValue="Avi"
-              keyboardType="visible-password"
               placeholder="Enter full name"
               fieldStyle={authStyles.textField}
               onChangeText={(text:string) => onChangeField("fullName", text)}
@@ -140,7 +138,6 @@ export default function CustomerRegisterScreen() {
           <Text style={authStyles.textFieldLabel}>Email address</Text>
           <View style={authStyles.textFieldContainerSecondary}>
             <TextField
-              
               placeholder="Enter Email"
               fieldStyle={authStyles.textField}
               onChangeText={(text:string) => onChangeField("email", text)}
@@ -157,8 +154,6 @@ export default function CustomerRegisterScreen() {
           <Text style={authStyles.textFieldLabel}>Password</Text>
           <View style={authStyles.textFieldContainerSecondary}>
             <TextField
-              keyboardType="visible-password"
-              
               placeholder="Enter Password"
               secureTextEntry
               onChangeText={(text:string) => onChangeField("password", text)}
@@ -176,8 +171,6 @@ export default function CustomerRegisterScreen() {
           <Text style={authStyles.textFieldLabel}>Re Enter password</Text>
           <View style={authStyles.textFieldContainerSecondary}>
             <TextField
-              keyboardType="visible-password"
-              
               placeholder="Re Enter Password"
               secureTextEntry
               fieldStyle={authStyles.textField}
@@ -239,13 +232,6 @@ export default function CustomerRegisterScreen() {
           </View>
         </View>
         <View>
-          <Link href="auth/welcome" asChild>
-            <Ionicons
-              name="arrow-back-circle-outline"
-              size={26}
-              style={{ position: "absolute", top: 20, color: "#003b6f" }}
-            />
-          </Link>
           <View style={{ flexDirection: "row", marginLeft: 120 }}>
             <Button
               label="Register"

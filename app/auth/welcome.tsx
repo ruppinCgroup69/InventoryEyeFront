@@ -17,9 +17,9 @@ import { useAuth } from "@/context/AuthContext";
 export default function WelcomeScreen() {
   const { user } = useAuth();
 
-  if (user) {
-    return <Redirect href="/home" />;
-  }
+ // if (user) {
+  //  return <Redirect href="/home" />;
+ // }
 
   return (
     <View style={authStyles.container}>
